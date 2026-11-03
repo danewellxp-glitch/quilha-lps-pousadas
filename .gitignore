@@ -1,0 +1,14 @@
+# saídas e caches do build (regeráveis)
+gerador/out/
+gerador/art/
+gerador/enh_cache/
+__pycache__/
+*.pyc
+# fotos nunca vão pro repo (peso + direito de imagem)
+fotos/
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.zip
+*.tar.gz

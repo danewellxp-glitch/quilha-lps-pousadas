@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pousada na Praia do Rosa | Aloha Beach House</title>
+  <meta name="description" content="Pousada na Praia do Rosa com cabanas, piscina, jacuzzi, café da manhã, estacionamento e atendimento acolhedor.">
+  <link rel="icon" href="favicon.svg">
+  <style>
+    :root {
+      --cream: #f5ead7;
+      --paper: #fffaf0;
+      --espresso: #321907;
+      --honey: #c77b3f;
+      --olive: #4e5a3a;
+      --muted: #6d604f;
+      --white: #fffdf8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--paper);
+      color: var(--espresso);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; border: 0; background: none; cursor: pointer; color: inherit; }
+
+    /* Language gate */
+    .lang-gate {
+      position: fixed; inset: 0; z-index: 99999;
+      display: none; place-items: center;
+      background: #253124;
+      color: var(--paper);
+      overflow: hidden;
+    }
+    html.lang-pending .lang-gate { display: grid; }
+    html.lang-pending, html.lang-pending body { overflow: hidden !important; }
+    .lang-gate video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; filter: brightness(.7) saturate(.82); z-index: -2;
+    }
+    .lang-gate .shade {
+      position: absolute; inset: 0; z-index: -1;
+      background: radial-gradient(circle at 50% 45%, #1e0e0414, #1e0e0499 78%),
+                  linear-gradient(#1208027a, #1208023d 48%, #120802ad);
+    }
+    .lang-box {
+      text-align: center;
+      background: #1e0e0494;
+      border: 1px solid #fffaf04d;
+      border-radius: 22px;
+      width: min(760px, 92vw);
+      padding: 42px 46px 38px;
+      backdrop-filter: blur(13px);
+      box-shadow: 0 30px 90px #0e060161;
+    }
+    .lang-box img { width: 210px; max-width: 62%; margin: 0 auto 27px; }
+    .lang-box > p {
+      color: #ead5b7; letter-spacing: .22em; text-transform: uppercase;
+      font-size: 11px; font-weight: 700;
+    }
+    .lang-box h1 {
+      font: 400 clamp(42px, 5vw, 66px)/.98 Georgia, serif;
+      letter-spacing: -.045em; margin: 17px 0 32px;
+    }
+    .lang-box h1 span {
+      display: block; color: #e6c99f; font-size: .55em; font-style: italic;
+      margin-top: 9px; letter-spacing: -.015em;
+    }
+    .lang-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .lang-choices button {
+      display: flex; align-items: center; gap: 15px;
+      text-align: left; color: var(--paper);
+      background: #fffaf01a; border: 1px solid #fffaf061;
+      border-radius: 14px; padding: 18px;
+      transition: .18s;
+    }
+    .lang-choices button:hover { background: #fffaf02e; border-color: #e5c79d; transform: translateY(-2px); }
+    .lang-flag {
+      width: 54px; height: 54px; border-radius: 50%;
+      background: #ffffff24; display: grid; place-items: center;
+      font-size: 30px; flex: none;
+    }
+    .lang-choices strong { display: block; font: 23px/1.1 Georgia, serif; }
+    .lang-choices small { display: block; color: #d9c8af; margin-top: 5px; font-size: 12px; }
+    .lang-loc {
+      display: block; margin-top: 28px; color: #d9c8af;
+      letter-spacing: .17em; text-transform: uppercase; font-size: 10px;
+    }
+    @media (max-width: 680px) {
+      .lang-choices { grid-template-columns: 1fr; }
+      .lang-box { padding: 34px 20px 28px; }
+    }
+
+    /* Nav */
+    .nav {
+      position: absolute; inset: 0 0 auto; z-index: 5;
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; height: 118px; padding: 22px 6vw;
+    }
+    .nav a, .nav button {
+      color: #fff; text-transform: uppercase; letter-spacing: .16em;
+      font-size: 12px; background: none; border: 0;
+    }
+    .navlinks { display: flex; align-items: center; gap: 36px; }
+    .navlinks.right { justify-content: flex-end; }
+    .navlinks.right button {
+      border: 1px solid #ffffffb3; padding: 15px 24px;
+    }
+    .logo img { width: 212px; }
+    .menu { display: none; font-size: 22px; color: #fff; }
+    .mobile-nav { display: none; }
+
+    /* Hero */
+    .hero {
+      position: relative; isolation: isolate;
+      color: var(--paper); background: #253124;
+      display: flex; justify-content: center; align-items: center;
+      height: 100svh; min-height: 900px;
+      padding: 140px 7vw 130px; overflow: hidden;
+    }
+    .hero-video {
+      position: absolute; inset: 0; z-index: -4;
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(.78) saturate(.78) contrast(1.04) sepia(.06);
+      transform: scale(1.015);
+    }
+    .hero-shade {
+      position: absolute; inset: 0; z-index: -3; pointer-events: none;
+      background: radial-gradient(at 50% 46%, #1e0e0414 0%, #1e0e0447 76%),
+                  linear-gradient(#180c047a 0%, #180c041f 41%, #180c048a 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2; text-align: center;
+      text-shadow: 0 3px 28px #12070194; margin-top: -40px;
+    }
+    .eyebrow {
+      text-transform: uppercase; letter-spacing: .22em;
+      font-size: 12px; font-weight: 700;
+    }
+    .hero h1 {
+      font: 400 clamp(56px, 6vw, 92px)/.91 Georgia, serif;
+      letter-spacing: -.045em; margin: 24px 0;
+    }
+    .hero-content > p:not(.eyebrow) { margin: 0 0 34px; font-size: 17px; }
+    .primary {
+      display: inline-block;
+      background: var(--honey); color: #fff;
+      text-transform: uppercase; letter-spacing: .17em;
+      padding: 20px 34px; font-size: 12px;
+      border: 1px solid transparent;
+      transition: .25s;
+    }
+    .hero .primary {
+      background: transparent; border-color: #fffaf0b8; color: var(--paper);
+    }
+    .hero .primary:hover {
+      background: var(--paper); color: var(--espresso); border-color: var(--paper);
+      transform: translateY(-2px);
+    }
+
+    /* Booking bar */
+    .booking {
+      position: absolute; z-index: 4; bottom: 55px; left: 7vw; right: 7vw;
+      background: var(--paper); color: var(--espresso);
+      border-radius: 16px; padding: 22px;
+      display: grid; grid-template-columns: 1.4fr .9fr 1.1fr;
+      align-items: stretch;
+      box-shadow: 0 18px 60px #14080052;
+    }
+    .booking label {
+      display: flex; flex-direction: column; gap: 10px;
+      border-right: 1px solid #d8c9b5; padding: 3px 28px;
+    }
+    .booking label:last-of-type { border-right: 0; }
+    .booking span {
+      text-transform: uppercase; letter-spacing: .14em;
+      font-size: 11px; font-weight: 700;
+    }
+    .booking select, .booking input {
+      color: #776d64; min-height: 30px; font-size: 16px; outline: none;
+    }
+    .booking button {
+      background: var(--espresso); color: #fff;
+      text-transform: uppercase; letter-spacing: .13em;
+      font-size: 12px; padding: 0 20px;
+    }
+
+    /* Sections */
+    .section { max-width: 1240px; margin: auto; padding: 120px 48px; }
+    .kicker {
+      text-transform: uppercase; letter-spacing: .22em;
+      font-size: 12px; font-weight: 700;
+    }
+    .section h2, .rosa h2 {
+      font: 400 58px/1.02 Georgia, serif;
+      letter-spacing: -.045em; margin: 18px 0 28px;
+    }
+    .intro, .experience {
+      display: grid; grid-template-columns: 1fr 1.08fr;
+      align-items: center; gap: 100px;
+    }
+    .introText > p:not(.kicker), .experienceText > p:not(.kicker) {
+      color: var(--muted); font-size: 17px; line-height: 1.8;
+    }
+    .text-link {
+      display: inline-flex; gap: 14px; margin-top: 18px;
+      text-transform: uppercase; letter-spacing: .15em; font-size: 12px;
+      border-bottom: 1px solid #c7a47c; padding-bottom: 10px;
+    }
+    .image-frame { position: relative; padding: 0 0 30px 30px; }
+    .image-frame::before {
+      content: ""; position: absolute; bottom: 0; left: 0;
+      width: 70%; height: 70%; background: var(--cream); z-index: -1;
+    }
+    .image-frame img { width: 100%; object-fit: cover; }
+    .image-frame > span {
+      position: absolute; bottom: 2px; right: -18px;
+      background: var(--espresso); color: #fff;
+      text-transform: uppercase; letter-spacing: .12em;
+      padding: 16px 24px; font-size: 10px;
+    }
+
+    /* Carousel */
+    .carousel { overflow: hidden; position: relative; }
+    .carousel-track {
+      display: flex; height: 490px;
+      transition: transform .75s cubic-bezier(.22,.61,.36,1);
+    }
+    .carousel-track img { min-width: 100%; height: 100%; object-fit: cover; }
+    .carousel-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      z-index: 3; width: 46px; height: 46px; border-radius: 50%;
+      background: #3219079e; color: #fff; border: 1px solid #ffffffb8;
+      font-size: 19px; backdrop-filter: blur(5px);
+    }
+    .carousel-arrow.prev { left: 18px; }
+    .carousel-arrow.next { right: 18px; }
+    .carousel-dots {
+      position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 3;
+    }
+    .carousel-dots button {
+      width: 7px; height: 7px; border-radius: 50%;
+      border: 1px solid #fff; background: transparent;
+    }
+    .carousel-dots button.active { background: #fff; }
+
+    /* Rooms / cards */
+    .rooms { background: #f3e7d2; padding: 25px 0 100px; }
+    .room-head {
+      display: flex; justify-content: space-between; align-items: end;
+      padding-bottom: 60px;
+    }
+    .room-head > p { max-width: 430px; color: var(--muted); }
+    .room-cards {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 28px; padding: 0 48px; max-width: 1240px; margin: 0 auto;
+    }
+    .corner-card {
+      display: flex; flex-direction: column; color: inherit;
+    }
+    .room-visual {
+      height: 280px; background-size: cover; background-position: center;
+      transition: transform .35s;
+    }
+    .corner-card:hover .room-visual { transform: translateY(-3px); }
+    .corner-card h3 {
+      margin: 22px 0 8px; font: 400 27px Georgia, serif;
+    }
+    .corner-card p { color: #796c5d; font-size: 14px; line-height: 1.6; flex: 1; }
+    .card-action {
+      text-transform: uppercase; letter-spacing: .13em; font-size: 10px;
+      border-bottom: 1px solid #aa8d69; align-self: flex-start;
+      margin-top: 14px; padding-bottom: 7px;
+    }
+
+    /* Rosa band */
+    .rosa {
+      color: #fff; min-height: 680px; display: flex; align-items: center;
+      background: linear-gradient(90deg, #1a0f06c7, #1a0f0614),
+                  url(hero.png) 50%/cover fixed;
+    }
+    .rosa-inner { width: 1240px; max-width: 100%; margin: auto; padding: 90px 48px; }
+    .rosa h2 { font-size: 72px; }
+    .rosa p:not(.kicker) { max-width: 520px; line-height: 1.8; }
+    .light { color: #efd5af; }
+    .outline {
+      display: inline-block; margin-top: 20px;
+      background: transparent; border: 1px solid #fff;
+      color: #fff; text-transform: uppercase; letter-spacing: .17em;
+      padding: 20px 34px; font-size: 12px;
+    }
+
+    /* Experience */
+    .experience { padding-top: 130px; padding-bottom: 130px; }
+    .experience-image { position: relative; }
+    .experience-image img { width: 100%; object-fit: cover; }
+    .experience-image::after {
+      content: "ALOHA BEACH SERVICE";
+      position: absolute; bottom: 28px; left: -34px;
+      background: var(--honey); color: #fff;
+      letter-spacing: .18em; padding: 17px 22px; font-size: 10px;
+    }
+    .experienceText ul { list-style: none; margin: 26px 0; }
+    .experienceText li {
+      border-bottom: 1px solid #dfd2bf; padding: 12px 0;
+    }
+
+    /* Property film */
+    .property-film {
+      color: var(--paper);
+      background: radial-gradient(circle at 7% 2%, #c77b3f33, transparent 28%),
+                  radial-gradient(circle at 98% 90%, #4e5a3a6b, transparent 32%), #251307;
+      padding: 100px 48px;
+    }
+    .property-film-inner {
+      display: grid; grid-template-columns: .74fr 1.26fr;
+      align-items: center; gap: 70px; max-width: 1260px; margin: auto;
+    }
+    .property-film h2 {
+      font: 400 clamp(42px, 5vw, 72px)/.98 Georgia, serif;
+      letter-spacing: -.045em; margin: 0 0 24px;
+    }
+    .property-film h2 em { color: #dfb47d; font-style: normal; display: block; }
+    .property-film p { color: #dccdb8; max-width: 430px; font-size: 16px; line-height: 1.78; }
+    .film-frame {
+      aspect-ratio: 16/9; background: #120902;
+      border: 1px solid #fffaf03d; position: relative; overflow: hidden;
+      box-shadow: 0 28px 70px #00000061;
+    }
+    .film-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+    /* Final CTA */
+    .final-cta {
+      text-align: center; color: #fff;
+      background: linear-gradient(#2a140547, #2a14056b), url(hero.png) 50% 64%/cover;
+      min-height: 330px; padding: 70px 25px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    .final-cta p {
+      font: 400 36px Georgia, serif; margin-bottom: 25px;
+      text-shadow: 0 2px 16px #0000004d;
+    }
+    .final-cta .primary {
+      background: #321907e0; border: 1px solid #ffffff8c;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #1d0d03; color: #e8dcc8; padding: 75px 6vw 28px;
+    }
+    .footer-main {
+      display: grid; grid-template-columns: 1.1fr 1.2fr .8fr;
+      gap: 80px; max-width: 1240px; margin: 0 auto 55px;
+    }
+    .footer-brand img { width: 200px; filter: brightness(0) invert(94%); }
+    .footer-brand p { font: 25px/1.35 Georgia, serif; margin: 28px 0 18px; max-width: 360px; }
+    .footer-brand span {
+      text-transform: uppercase; letter-spacing: .15em; color: #bba98f; font-size: 10px;
+    }
+    .footer-links { display: grid; grid-template-columns: 1fr 1fr; gap: 45px; }
+    .site-footer h3 {
+      text-transform: uppercase; letter-spacing: .2em; color: #c9aa7b;
+      margin: 5px 0 24px; font-size: 10px;
+    }
+    .footer-links a {
+      display: block; color: #e8dcc8; margin: 0 0 15px; font-size: 13px;
+      transition: .2s;
+    }
+    .footer-links a:hover { color: #fff; transform: translateX(3px); }
+    .social-btn {
+      display: flex; align-items: center; gap: 14px;
+      color: #fff; border: 1px solid #e8dcc859; padding: 14px;
+      margin-bottom: 12px; transition: .25s;
+    }
+    .social-btn:hover { background: #f3e7d2; color: #321907; border-color: #f3e7d2; }
+    .social-btn svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+    .social-btn small {
+      display: block; text-transform: uppercase; letter-spacing: .12em;
+      opacity: .7; font-size: 8px; margin-bottom: 3px;
+    }
+    .footer-legal {
+      max-width: 1240px; margin: auto; padding-top: 25px;
+      border-top: 1px solid #e8dcc82e;
+      display: flex; justify-content: space-between; gap: 50px;
+      color: #9f8d74; font-size: 9px; line-height: 1.7;
+    }
+
+    /* WhatsApp float */
+    .wa-float {
+      position: fixed; top: 52%; right: 28px; transform: translateY(-50%);
+      z-index: 9999; display: flex; align-items: center; gap: 10px;
+      color: #fff; text-decoration: none;
+    }
+    .wa-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #25d366; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 30px #00000047, 0 0 0 7px #25d36629;
+      animation: waPulse 2.8s ease-in-out infinite;
+      transition: .25s;
+    }
+    .wa-circle svg { width: 36px; height: 36px; fill: none; stroke: #fff; stroke-width: 1.8; }
+    .wa-float:hover .wa-circle { background: #20bd5a; transform: scale(1.07); }
+    @keyframes waPulse {
+      0%, 100% { box-shadow: 0 10px 30px #00000047, 0 0 0 7px #25d3661f; }
+      50% { box-shadow: 0 10px 30px #00000047, 0 0 0 13px #25d3660a; }
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .hero { min-height: 820px; padding: 120px 22px 220px; }
+      .nav { grid-template-columns: 1fr auto; height: 90px; padding: 16px 22px; }
+      .menu { display: block; }
+      .navlinks { display: none; }
+      .logo { grid-column: 2; }
+      .logo img { width: 155px; }
+      .mobile-nav.open {
+        display: flex; flex-direction: column; gap: 16px;
+        position: absolute; top: 86px; left: 16px; right: 16px;
+        background: var(--espresso); padding: 24px; z-index: 10;
+      }
+      .mobile-nav a, .mobile-nav button {
+        color: #fff; text-transform: uppercase; letter-spacing: .14em; font-size: 12px;
+        text-align: left;
+      }
+      .hero h1 { font-size: 52px; }
+      .booking {
+        grid-template-columns: 1fr 1fr; bottom: 25px; left: 18px; right: 18px; padding: 15px;
+      }
+      .booking label { border-bottom: 1px solid #dfd2bf; padding: 10px; border-right: 0; }
+      .booking button { grid-column: 1 / -1; min-height: 58px; }
+      .intro, .experience, .property-film-inner { grid-template-columns: 1fr; gap: 45px; }
+      .section { padding: 80px 24px; }
+      .section h2 { font-size: 43px; }
+      .room-cards { grid-template-columns: 1fr; padding: 0 24px; }
+      .room-head { display: block; padding: 0 24px 40px; }
+      .rosa { background-attachment: scroll; }
+      .rosa-inner { padding: 80px 25px; }
+      .rosa h2 { font-size: 52px; }
+      .experience-image::after { left: 8px; }
+      .footer-main { grid-template-columns: 1fr; gap: 45px; }
+      .footer-legal { display: block; }
+      .wa-float { top: auto; bottom: 20px; right: 18px; transform: none; }
+      .wa-circle { width: 58px; height: 58px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Language gate -->
+  <section class="lang-gate" id="langGate" role="dialog" aria-modal="true" aria-labelledby="langTitle">
+    <video class="lang-video" autoplay muted loop playsinline preload="metadata" poster="aloha-hero-poster.jpg" aria-hidden="true">
+      <source src="aloha-hero.mp4" type="video/mp4">
+    </video>
+    <div class="shade" aria-hidden="true"></div>
+    <div class="lang-box">
+      <img src="aloha-logo-ivory.png" alt="Aloha Beach House">
+      <p>Bem-vindo · Bienvenido</p>
+      <h1 id="langTitle">Escolha seu idioma<span>Elegí tu idioma</span></h1>
+      <div class="lang-choices">
+        <button type="button" data-lang="pt">
+          <span class="lang-flag" aria-hidden="true">🇧🇷</span>
+          <span><strong>Português</strong><small>Continuar em português</small></span>
+        </button>
+        <button type="button" data-lang="es">
+          <span class="lang-flag" aria-hidden="true">🇦🇷</span>
+          <span><strong>Español</strong><small>Continuar en español</small></span>
+        </button>
+      </div>
+      <small class="lang-loc">Praia do Rosa · Santa Catarina · Brasil</small>
+    </div>
+  </section>
+
+  <main>
+    <nav class="nav" aria-label="Navegação principal">
+      <button class="menu" id="menuBtn" aria-label="Abrir menu">☰</button>
+      <div class="navlinks">
+        <a href="pousada.html">A pousada</a>
+        <a href="acomodacoes.html">Acomodações</a>
+      </div>
+      <a class="logo" href="#inicio" aria-label="Aloha Beach House">
+        <img src="aloha-logo-ivory.png" alt="Aloha Beach House">
+      </a>
+      <div class="navlinks right">
+        <a href="#rosa">Praia do Rosa</a>
+        <a href="#contato">Contato</a>
+        <button type="button" onclick="location.href='reservas.html'">Reservar</button>
+      </div>
+      <div class="mobile-nav" id="mobileNav">
+        <a href="pousada.html">A pousada</a>
+        <a href="acomodacoes.html">Acomodações</a>
+        <a href="#rosa">Praia do Rosa</a>
+        <a href="#contato">Contato</a>
+        <button type="button" onclick="location.href='reservas.html'">Reservar</button>
+      </div>
+    </nav>
+
+    <section class="hero" id="inicio">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="aloha-hero-poster.jpg" aria-hidden="true">
+        <source src="aloha-hero.mp4" type="video/mp4">
+      </video>
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="eyebrow">Praia do Rosa · Santa Catarina</p>
+        <h1>Seu Refúgio na<br>Praia do Rosa</h1>
+        <p>Dias leves, natureza por perto e a energia única do sul do Brasil.</p>
+        <a class="primary" href="reservas.html">Reserve sua experiência</a>
+      </div>
+      <form class="booking" id="bookingForm" action="reservas.html" method="get">
+        <label>
+          <span>Check-in</span>
+          <input type="date" name="checkin" required>
+        </label>
+        <label>
+          <span>Check-out</span>
+          <input type="date" name="checkout" required>
+        </label>
+        <label>
+          <span>Hóspedes</span>
+          <select name="hospedes">
+            <option value="1">1 hóspede</option>
+            <option value="2" selected>2 hóspedes</option>
+            <option value="3">3 hóspedes</option>
+            <option value="4">4 hóspedes</option>
+            <option value="5">5 hóspedes</option>
+            <option value="6">6 hóspedes</option>
+          </select>
+        </label>
+        <button type="submit">Buscar acomodações</button>
+      </form>
+    </section>
+
+    <section class="intro section" id="pousada">
+      <div class="introText">
+        <p class="kicker">Bem-vindo à Aloha</p>
+        <h2>Uma pousada com alma de casa de praia.</h2>
+        <p>Entre o verde e o mar, a Aloha Beach House é um convite para desacelerar. Um lugar acolhedor, descontraído e cheio de pequenos detalhes pensados para você viver o melhor da Praia do Rosa.</p>
+        <a href="#acomodacoes" class="text-link">Conheça a pousada <span>→</span></a>
+      </div>
+      <div class="image-frame carousel" aria-roledescription="carrossel" aria-label="Galeria da pousada">
+        <div class="carousel-track" id="carouselTrack">
+          <img src="carousel-1.jpg" alt="Piscina da Aloha Beach House">
+          <img src="carousel-2.jpg" alt="Deck e piscina">
+          <img src="carousel-3.jpg" alt="Rede entre as palmeiras">
+          <img src="carousel-4.jpg" alt="Tiki Bar">
+          <img src="carousel-5.jpg" alt="Jacuzzi">
+          <img src="carousel-6.jpg" alt="Sala de jantar">
+          <img src="carousel-7.jpg" alt="Varanda privativa">
+          <img src="carousel-8.jpg" alt="Quarto com madeira">
+          <img src="carousel-9.jpg" alt="Cabana iluminada">
+          <img src="carousel-10.jpg" alt="Interior aconchegante">
+          <img src="carousel-11.jpg" alt="Entrada da Cabana Hawaii">
+        </div>
+        <button class="carousel-arrow prev" type="button" aria-label="Anterior" id="carPrev">←</button>
+        <button class="carousel-arrow next" type="button" aria-label="Próxima" id="carNext">→</button>
+        <div class="carousel-dots" id="carDots" aria-label="Escolher imagem"></div>
+        <span>Jeito Aloha de receber</span>
+      </div>
+    </section>
+
+    <section class="rooms" id="acomodacoes">
+      <div class="section room-head">
+        <div>
+          <p class="kicker">A experiência Aloha</p>
+          <h2>O seu canto no Rosa.</h2>
+        </div>
+        <p>Mais do que uma estadia: conforto, praia, sabores e experiências pensadas para você aproveitar cada momento.</p>
+      </div>
+      <div class="room-cards">
+        <a class="corner-card" href="acomodacoes.html">
+          <div class="room-visual" style="background-image:linear-gradient(140deg,rgba(50,25,7,.03),rgba(50,25,7,.24)),url('canto-acomodacoes.jpg')"></div>
+          <h3>Acomodações</h3>
+          <p>Cabanas acolhedoras, confortáveis e cheias de personalidade para você se sentir em casa.</p>
+          <span class="card-action">Conhecer acomodações</span>
+        </a>
+        <a class="corner-card" href="pousada.html">
+          <div class="room-visual" style="background-image:linear-gradient(140deg,rgba(50,25,7,.03),rgba(50,25,7,.24)),url('canto-piscina.jpg')"></div>
+          <h3>Piscina &amp; jacuzzi</h3>
+          <p>Um refúgio tropical para mergulhar, relaxar e aproveitar o ritmo tranquilo do Rosa.</p>
+          <span class="card-action">Explorar a piscina</span>
+        </a>
+        <a class="corner-card" href="reservas.html">
+          <div class="room-visual" style="background-image:linear-gradient(140deg,rgba(50,25,7,.03),rgba(50,25,7,.24)),url('canto-cafe.jpg')"></div>
+          <h3>Café da manhã incluso</h3>
+          <p>Comece o dia com uma mesa preparada com carinho, sabores frescos e aquele gostinho de casa.</p>
+          <span class="card-action">Reservar estadia</span>
+        </a>
+        <a class="corner-card" href="pousada.html">
+          <div class="room-visual" style="background-image:linear-gradient(140deg,rgba(50,25,7,.03),rgba(50,25,7,.24)),url('canto-churrasqueira.jpg')"></div>
+          <h3>Churrasqueiras a gás e carvão</h3>
+          <p>Espaço completo para reunir a família, preparar um churrasco e aproveitar sem pressa.</p>
+          <span class="card-action">Conhecer o espaço</span>
+        </a>
+        <a class="corner-card" href="#rosa">
+          <div class="room-visual" style="background-image:linear-gradient(140deg,rgba(50,25,7,.03),rgba(50,25,7,.24)),url('canto-localizacao.jpg')"></div>
+          <h3>Localização privilegiada</h3>
+          <p>No centrinho do Rosa, a 10 minutos a pé da Rosa Norte e a 3 minutos de carro da Rosa Sul.</p>
+          <span class="card-action">Explorar o Rosa</span>
+        </a>
+        <a class="corner-card" href="reservas.html">
+          <div class="room-visual" style="background-image:linear-gradient(140deg,rgba(50,25,7,.03),rgba(50,25,7,.24)),url('canto-pet-friendly.jpg')"></div>
+          <h3>Pet-friendly</h3>
+          <p>Seu companheiro de quatro patas também é bem-vindo para viver dias especiais com toda a família.</p>
+          <span class="card-action">Reservar com seu pet</span>
+        </a>
+        <a class="corner-card" href="reservas.html">
+          <div class="room-visual" style="background-image:linear-gradient(140deg,rgba(50,25,7,.03),rgba(50,25,7,.24)),url('canto-estacionamento.jpg')"></div>
+          <h3>Estacionamento gratuito</h3>
+          <p>Mais comodidade desde a chegada, com estacionamento gratuito incluído durante sua estadia.</p>
+          <span class="card-action">Reservar estadia</span>
+        </a>
+        <a class="corner-card" href="acomodacoes.html">
+          <div class="room-visual" style="background-image:linear-gradient(140deg,rgba(50,25,7,.03),rgba(50,25,7,.24)),url('canto-limpeza.jpg')"></div>
+          <h3>Limpeza e cuidado</h3>
+          <p>Ambientes preparados com atenção aos detalhes para uma estadia confortável e tranquila.</p>
+          <span class="card-action">Conhecer acomodações</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="rosa" id="rosa">
+      <div class="rosa-inner">
+        <p class="kicker light">Praia do Rosa</p>
+        <h2>Um lugar que fica<br>com você.</h2>
+        <p>Mar, trilhas, lagoas, gastronomia e uma natureza que muda o ritmo dos seus dias. Descubra um dos destinos mais especiais do litoral brasileiro.</p>
+        <a href="#contato" class="outline">Explorar o Rosa</a>
+      </div>
+    </section>
+
+    <section class="experience section" id="experiencias">
+      <div class="experience-image">
+        <img src="beach-service.png" alt="Serviço de praia Aloha">
+      </div>
+      <div class="experienceText">
+        <p class="kicker">Experiência Aloha</p>
+        <h2>Da pousada para a praia, cuidamos de tudo.</h2>
+        <p>Com o Aloha Beach Service, seu dia de praia fica ainda mais leve: cadeira, guarda-sol, cooler e uma seleção fresca preparada na hora.</p>
+        <ul>
+          <li>Sanduíches naturais Aloha</li>
+          <li>Açaí com frutas, granola e mel local</li>
+          <li>Água de coco, frutas e bebidas geladas</li>
+        </ul>
+        <a href="#contato" class="text-link">Descobrir o Beach Service <span>→</span></a>
+      </div>
+    </section>
+
+    <section class="property-film" aria-labelledby="film-title">
+      <div class="property-film-inner">
+        <div>
+          <p class="kicker" style="color:#dfb47d">Conheça a Aloha em movimento</p>
+          <h2 id="film-title">Um pouco de tudo.<em>O melhor do Rosa.</em></h2>
+          <p>Um passeio pelas cabanas, piscina, jacuzzi e pelos espaços onde cada dia encontra um ritmo mais leve.</p>
+        </div>
+        <div class="film-frame">
+          <iframe src="https://www.youtube-nocookie.com/embed/yzBKk7nPBXY?rel=0&modestbranding=1" title="Vídeo da Aloha Beach House" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" id="contato">
+      <p>Seu próximo destino inesquecível começa aqui.</p>
+      <a class="primary" href="reservas.html">Reservar sua estadia</a>
+    </section>
+
+    <footer class="site-footer">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <img src="aloha-logo-ivory.png" alt="Aloha Beach House">
+          <p>Uma pousada com alma de casa de praia.</p>
+          <span>Praia do Rosa · Santa Catarina · Brasil</span>
+        </div>
+        <div class="footer-links">
+          <div>
+            <h3>Explore</h3>
+            <a href="#pousada">A pousada</a>
+            <a href="#acomodacoes">Acomodações</a>
+            <a href="#experiencias">Experiência Aloha</a>
+            <a href="#rosa">Praia do Rosa</a>
+          </div>
+          <div>
+            <h3>Informações</h3>
+            <a href="reservas.html">Reservas</a>
+            <a href="#contato">Contato</a>
+          </div>
+        </div>
+        <div>
+          <h3>Fale com a Aloha</h3>
+          <a class="social-btn" href="https://www.instagram.com/pousadaalohapraiadorosa/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            <span><small>Siga nosso dia a dia</small>Instagram</span>
+          </a>
+          <a class="social-btn" href="https://wa.me/554891801910?text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20a%20Aloha%20Beach%20House." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M20 11.7a8 8 0 0 1-11.8 7L4 20l1.3-4A8 8 0 1 1 20 11.7Z"/><path d="M9 8.5c.4 2.7 2 4.3 4.8 5.2"/></svg>
+            <span><small>Reservas e informações</small>WhatsApp</span>
+          </a>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p>Imagens, tarifas e disponibilidade são ilustrativas. Reserva confirmada somente após comunicação oficial da Aloha Beach House.</p>
+        <span>© 2026 Aloha Beach House. Todos os direitos reservados.</span>
+      </div>
+    </footer>
+  </main>
+
+  <a class="wa-float" href="https://wa.me/554891801910?text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20a%20Aloha%20Beach%20House." target="_blank" rel="noopener" aria-label="WhatsApp">
+    <span class="wa-circle">
+      <svg viewBox="0 0 24 24"><path d="M20 11.7a8 8 0 0 1-11.8 7L4 20l1.3-4A8 8 0 1 1 20 11.7Z"/><path d="M9 8.5c.4 2.7 2 4.3 4.8 5.2"/></svg>
+    </span>
+  </a>
+
+  <script>
+    // Language gate
+    (function () {
+      if (sessionStorage.getItem('aloha-lang-ok') === '1') return;
+      document.documentElement.classList.add('lang-pending');
+      document.querySelectorAll('[data-lang]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          sessionStorage.setItem('aloha-lang-ok', '1');
+          sessionStorage.setItem('aloha-lang', btn.getAttribute('data-lang'));
+          document.documentElement.classList.remove('lang-pending');
+        });
+      });
+    })();
+
+    // Mobile menu
+    document.getElementById('menuBtn').addEventListener('click', function () {
+      document.getElementById('mobileNav').classList.toggle('open');
+    });
+
+    // Carousel
+    (function () {
+      var track = document.getElementById('carouselTrack');
+      var slides = track.children.length;
+      var idx = 0;
+      var dots = document.getElementById('carDots');
+      for (var i = 0; i < slides; i++) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Imagem ' + (i + 1));
+        if (i === 0) b.className = 'active';
+        (function (n) { b.onclick = function () { go(n); }; })(i);
+        dots.appendChild(b);
+      }
+      function go(n) {
+        idx = (n + slides) % slides;
+        track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+        dots.querySelectorAll('button').forEach(function (d, i) {
+          d.classList.toggle('active', i === idx);
+        });
+      }
+      document.getElementById('carPrev').onclick = function () { go(idx - 1); };
+      document.getElementById('carNext').onclick = function () { go(idx + 1); };
+      setInterval(function () { go(idx + 1); }, 5000);
+    })();
+
+    // Min date today
+    (function () {
+      var t = new Date().toISOString().slice(0, 10);
+      document.querySelectorAll('input[type=date]').forEach(function (el) {
+        el.min = t;
+      });
+    })();
+  </script>
+</body>
+</html>
