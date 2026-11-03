@@ -52,3 +52,4 @@ Migrado em 2026-11-03 a partir dos módulos `gerador/data/*.py` da pasta do PC. 
 | Pousada Talismã | `data/talisma.py` | `aurelia` |  | |
 | Pousada Uluwatu | `data/uluwatu.py` | `doma` |  | |
 | Pousada Vila Porto da Lagoa | `data/vila_porto_site.py` | `casa` | Pousada Vila Porto da Lagoa | |
+| Residencial Jade | `data/residencialjade.py` | `stayora` | Residencial Jade (Servidão Maria Serafina de Oliveira, 140, Cachoeira do Bom Jesus, Florianópolis) — @residencialjade (323 seg.) · Google 4,8 (185) · Airbnb 4,91 (430, perfil do José; AP1 4,95/19, AP5 4,96/107) · Booking 8,9 (53, snippet) · Tripadvisor 4,4 (32). Site próprio residencialjade.com.br existe mas está com seções vazias e o Google não aponta pra ele. Fotos 100% Airbnb (ab). Anfitrião: Sr. José e esposa. | https://claude.ai/artifact/3nwA7dgJwT4WRyuXpwAF2W |
