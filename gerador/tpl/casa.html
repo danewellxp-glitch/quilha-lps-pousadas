@@ -242,6 +242,10 @@ html.lang-pending,html.lang-pending body{overflow:hidden!important}
   .wa-circle{width:58px;height:58px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+{% if p.extra_css %}
+/* ajustes desta pousada (P.extra_css) */
+{{ p.extra_css|safe }}
+{% endif %}
 </style>
 
 {% macro brand(cls='') -%}
@@ -389,7 +393,7 @@ html.lang-pending,html.lang-pending body{overflow:hidden!important}
     <div class="rv-grid">
       {% for r in p.reviews['items'] %}
       <article class="rv" data-src="{{ r.key }}">
-        <div class="stars" aria-label="{{ r.stars }} estrelas">{{ '★' * r.stars }}</div>
+        {% if r.stars %}<div class="stars" aria-label="{{ r.stars }} estrelas">{{ '★' * r.stars }}</div>{% else %}<div class="stars rec">✓ Recomenda</div>{% endif %}
         <blockquote>“{{ r.text }}”</blockquote>
         <cite><b>{{ r.author }}</b><span>{{ r.source }}</span></cite>
       </article>

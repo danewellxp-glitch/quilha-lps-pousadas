@@ -112,3 +112,8 @@ O script de coleta do Maps pega também as miniaturas de **outros hotéis** da b
 - **Instagram bloqueia `eval`** (CSP). Para rodar o zip_download no instagram.com a partir de um script guardado no `localStorage`, injete via `<script src=blob:...>` (o CSP aceita `blob:`).
 - Truque de produtividade: guardar `gm_all.js`, `ig_harvest.js` e `zip_download` como string no `localStorage` da origem (google.com / instagram.com) e chamar com `eval(localStorage.x)(args)` nas outras abas, sem colar o script de novo.
 - Na barra de avaliações do Stayora (`reviews.bars`), use só notas reais de plataforma (Google, Booking, Airbnb). Nada de "Limpeza 5,0" inventado.
+
+## Novidades de 04/11/2026
+- `tpl/casa.html` e `tpl/casa_reservas.html` aceitam `p.extra_css` (CSS extra por pousada, injetado no fim do 1º `<style>`). Usado na Isabela para reforçar o contraste do texto sobre foto clara de praia (véu azul-petróleo no hero, faixa, CTA e topo de reservas) sem mexer nas outras prévias.
+- `rooms[].guests=''` esconde "Até X hóspedes" (quando a capacidade não é publicada); review com `stars=0` mostra o selo "✓ Recomenda" (Facebook não tem nota em estrelas).
+- **Fotos do Maps sem passar pelo PC:** liste as URLs da galeria no Chrome (`lh3.googleusercontent.com/<path>`), passe a lista por `localStorage` pra outra aba de google.com, escreva num `<pre>` e leia com `get_page_text` (evita o truncamento do `javascript_tool`). No container: `curl https://lh3.googleusercontent.com/<path>=s2400`.
